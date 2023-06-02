@@ -1,5 +1,32 @@
 import json
 
+def flatten_json_schema(json_schema, prefix='', delimiter='_'):
+    """
+    Flattens a JSON schema by unwrapping nested structs and creating flattened property names.
+
+    Args:
+        json_schema (dict): The JSON schema.
+        prefix (str): Prefix for the flattened property names (used for recursion).
+        delimiter (str): Delimiter to separate flattened property names.
+
+    Returns:
+        dict: The flattened JSON schema.
+    """
+    flattened_schema = {}
+
+    for key, value in json_schema["properties"].items():
+        if value["type"] == "object":
+            # Flatten the nested struct recursively
+            flattened_properties = flatten_json_schema(value, prefix=f"{prefix}{key}{delimiter}", delimiter=delimiter)
+            flattened_schema.update(flattened_properties)
+        else:
+            # Create the flattened property name
+            flattened_key = f"{prefix}{key}"
+            flattened_schema[flattened_key] = value
+
+    return flattened_schema
+
+
 def glue_column_type_from_json_schema(value):
     """
     Converts a JSON schema type to an AWS Glue column type.
@@ -44,20 +71,27 @@ def glue_column_type_from_json_schema(value):
     else:
         raise Exception("Unknown type")
 
-def convert_json_schema_to_glue_columns(json_schema):
+def convert_json_schema_to_glue_columns(json_schema, flatten=False, delimiter='_'):
     """
     Converts a JSON schema to a list of AWS Glue columns.
 
     Args:
         json_schema (dict): The JSON schema.
+        flatten (bool): Whether to flatten the schema before generating Glue columns.
+        delimiter (str): Delimiter to separate flattened property names.
 
     Returns:
         list: The list of Glue columns.
     """
+    if flatten:
+        flattened_schema = flatten_json_schema(json_schema, delimiter=delimiter)
+        schema_properties = flattened_schema
+    else:
+        schema_properties = json_schema["properties"]
+
     columns = []
 
-    # Convert each property of the JSON schema to a Glue column
-    for key, value in json_schema["properties"].items():
+    for key, value in schema_properties.items():
         column = {
             "Name": key,
             "Type": glue_column_type_from_json_schema(value)
