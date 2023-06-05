@@ -1,0 +1,2 @@
+s3_location: "s3://bucket/prefix"
+pipeline_type: "SCD1"
