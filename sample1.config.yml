@@ -1,2 +1,31 @@
-s3_location: "s3://bucket/prefix"
-pipeline_type: "SCD1"
+# This YAML file defines the configuration for data processing.
+# It specifies the data format, pipeline type, and storage zones.
+
+# Placeholders:
+# [aws_env]: AWS environment of the resources
+# [logical_env]: Logical environment of the resources
+
+# Data format for the pipeline (JSON in this case)
+# Allowed values are csv, json, xml
+data_format: json
+
+# Type of pipeline (SCD1/SCD2)
+pipeline_type: SCD1
+
+# Storage zones for different stages of data processing
+storage_zones:
+  raw:
+    # Database name for raw data
+    database: "[logical_env]_source_raw"
+    # Table name for raw data
+    table: sample
+    # S3 location for raw data
+    s3_location: s3://org-[aws_env]-[logical_env]-raw/prefix
+
+  staging:
+    # Database name for staging data
+    database: "[logical_env]_source_staging"
+    # Table name for staging data
+    table: sample
+    # S3 location for staging data
+    s3_location: s3://org-[aws_env]-[logical_env]-staging/prefix

@@ -1,5 +1,59 @@
 import json
 
+import boto3
+import json
+import yaml
+
+def load_json_from_s3(bucket_name, object_key):
+    """
+    Retrieves a JSON file from an S3 bucket and loads its contents.
+
+    Args:
+        bucket_name (str): The name of the S3 bucket.
+        object_key (str): The key of the JSON file within the bucket.
+
+    Returns:
+        dict: The loaded JSON data.
+    """
+    # Create an S3 client
+    s3 = boto3.client('s3')
+
+    # Retrieve the object from S3
+    response = s3.get_object(Bucket=bucket_name, Key=object_key)
+
+    # Read the JSON content from the response
+    json_content = response['Body'].read().decode('utf-8')
+
+    # Parse the JSON content
+    data = json.loads(json_content)
+
+    return data
+
+def load_yaml_from_s3(bucket_name, object_key):
+    """
+    Retrieves a YAML file from an S3 bucket and loads its contents.
+
+    Args:
+        bucket_name (str): The name of the S3 bucket.
+        object_key (str): The key of the YAML file within the bucket.
+
+    Returns:
+        dict: The loaded YAML data.
+    """
+    # Create an S3 client
+    s3 = boto3.client('s3')
+
+    # Retrieve the object from S3
+    response = s3.get_object(Bucket=bucket_name, Key=object_key)
+
+    # Read the YAML content from the response
+    yaml_content = response['Body'].read().decode('utf-8')
+
+    # Parse the YAML content
+    yaml_data = yaml.safe_load(yaml_content)
+
+    return yaml_data
+
 def flatten_json_schema(json_schema, prefix='', delimiter='_'):
     """
     Flattens a JSON schema by unwrapping nested structs and creating flattened property names.
