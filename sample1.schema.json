@@ -13,7 +13,7 @@
     ],
     "additionalProperties": true,
     "properties": {
-        "id": {
+        "ID": {
             "title": "The id Schema",
             "type": "number",
             "default": 0,
@@ -39,7 +39,7 @@
             ],
             "additionalProperties": true,
             "properties": {
-                "lastname": {
+                "last name": {
                     "title": "The lastname Schema",
                     "type": "string",
                     "default": "",
@@ -47,7 +47,7 @@
                         "Doe"
                     ]
                 },
-                "firstname": {
+                "first-name": {
                     "title": "The firstname Schema",
                     "type": "string",
                     "default": "",
@@ -71,7 +71,7 @@
             ],
             "additionalProperties": true,
             "properties": {
-                "lastname": {
+                "last name": {
                     "title": "The lastname Schema",
                     "type": "string",
                     "default": "",
@@ -79,7 +79,7 @@
                         "Smith"
                     ]
                 },
-                "firstname": {
+                "first-name": {
                     "title": "The firstname Schema",
                     "type": "string",
                     "default": "",

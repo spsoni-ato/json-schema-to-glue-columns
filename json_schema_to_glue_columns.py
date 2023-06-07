@@ -23,12 +23,13 @@ def load_json_schema(schema_file_location):
     return schema
 
 
-def load_yaml_config(config_file_location):
+def load_yaml_config(config_file_location, placeholders):
     """
     Loads a configuration file in YAML format.
 
     Args:
         config_file_location (str): The path to the configuration file.
+        placeholders (dict): A dictionary of placeholders and their corresponding values.
 
     Returns:
         dict: The loaded configuration data.
@@ -36,7 +37,8 @@ def load_yaml_config(config_file_location):
     # Open the configuration file
     with open(config_file_location) as config_file:
         # Load the YAML content
-        config = yaml.safe_load(config_file)
+        _config = yaml.safe_load(config_file)
+        config = replace_placeholders(_config, placeholders)
 
     return config
 
@@ -151,6 +153,29 @@ def create_partition_keys(partition_key_list):
     return partition_keys
 
 
+def convert_to_lower_with_underscore(string):
+    """
+    Converts a string to lowercase, replaces special characters with an underscore,
+    and strips leading/trailing whitespaces.
+
+    Args:
+        string (str): The input string.
+
+    Returns:
+        str: The converted string.
+    """
+    # Strip leading/trailing whitespaces
+    stripped_string = string.strip()
+
+    # Convert the string to lowercase
+    lowercase_string = stripped_string.lower()
+
+    # Replace special characters with an underscore
+    converted_string = re.sub(r'[^a-z0-9_]+', '_', lowercase_string)
+
+    return converted_string
+
+
 def flatten_json_schema(json_schema, prefix='', delimiter='_'):
     """
     Flattens a JSON schema by unwrapping nested structs and creating flattened property names.
@@ -204,6 +229,7 @@ def glue_column_type_from_json_schema(value):
 
         # Convert each property of the object to Glue column type
         for _key, _value in value["properties"].items():
+            _key = convert_to_lower_with_underscore(_key)
             _column_type = glue_column_type_from_json_schema(_value)
             _column = f"{_key}:{_column_type}"
             _columns.append(_column)
@@ -252,7 +278,7 @@ def convert_json_schema_to_glue_columns(json_schema, flatten=False, delimiter='_
             raise Exception(f"Required key 'type' not found for {key}.")
 
         column = {
-            "Name": key,
+            "Name": convert_to_lower_with_underscore(key),
             "Type": glue_column_type_from_json_schema(value)
         }
     
