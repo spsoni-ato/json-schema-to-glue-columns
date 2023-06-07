@@ -4,6 +4,55 @@ import re
 import boto3
 import yaml
 
+def replace_placeholders(dictionary, placeholders):
+    """
+    Replaces placeholders in a dictionary with corresponding values using regex.
+
+    Args:
+        dictionary (dict): The dictionary to process.
+        placeholders (dict): A dictionary of placeholders and their corresponding values.
+
+    Returns:
+        dict: The updated dictionary with replaced placeholders.
+    """
+    replaced_dict = {}
+    for key, value in dictionary.items():
+        if isinstance(value, dict):
+            # Recursively process nested dictionaries
+            replaced_dict[key] = replace_placeholders(value, placeholders)
+        elif isinstance(value, str):
+            # Replace placeholders in string values using regex
+            pattern = re.compile(r'\[(.*?)\]')
+            replaced_value = pattern.sub(lambda x: placeholders[x.group()], value)
+            replaced_dict[key] = replaced_value
+        else:
+            # Keep non-string, non-dict values as is
+            replaced_dict[key] = value
+    return replaced_dict
+
+
+def convert_to_lower_with_underscore(string):
+    """
+    Converts a string to lowercase, replaces special characters with an underscore,
+    and strips leading/trailing whitespaces.
+
+    Args:
+        string (str): The input string.
+
+    Returns:
+        str: The converted string.
+    """
+    # Strip leading/trailing whitespaces
+    stripped_string = string.strip()
+
+    # Convert the string to lowercase
+    lowercase_string = stripped_string.lower()
+
+    # Replace special characters with an underscore
+    converted_string = re.sub(r'[^a-z0-9_]+', '_', lowercase_string)
+
+    return converted_string
+
 
 def load_json_schema(schema_file_location):
     """
@@ -95,33 +144,6 @@ def load_yaml_from_s3(bucket_name, object_key):
     return yaml_data
 
 
-def replace_placeholders(dictionary, placeholders):
-    """
-    Replaces placeholders in a dictionary with corresponding values using regex.
-
-    Args:
-        dictionary (dict): The dictionary to process.
-        placeholders (dict): A dictionary of placeholders and their corresponding values.
-
-    Returns:
-        dict: The updated dictionary with replaced placeholders.
-    """
-    replaced_dict = {}
-    for key, value in dictionary.items():
-        if isinstance(value, dict):
-            # Recursively process nested dictionaries
-            replaced_dict[key] = replace_placeholders(value, placeholders)
-        elif isinstance(value, str):
-            # Replace placeholders in string values using regex
-            pattern = re.compile(r'\[(.*?)\]')
-            replaced_value = pattern.sub(lambda x: placeholders[x.group()], value)
-            replaced_dict[key] = replaced_value
-        else:
-            # Keep non-string, non-dict values as is
-            replaced_dict[key] = value
-    return replaced_dict
-
-
 def create_partition_keys(partition_key_list):
     """
     Creates a list of partition keys from a given partition key list.
@@ -153,27 +175,37 @@ def create_partition_keys(partition_key_list):
     return partition_keys
 
 
-def convert_to_lower_with_underscore(string):
+def get_additional_columns(pipeline_type):
     """
-    Converts a string to lowercase, replaces special characters with an underscore,
-    and strips leading/trailing whitespaces.
+    Get additional columns based on the pipeline type.
 
     Args:
-        string (str): The input string.
+        pipeline_type (str): The pipeline type.
 
     Returns:
-        str: The converted string.
+        list or None: The additional columns as a list of dictionaries, or None if the pipeline type is unknown.
     """
-    # Strip leading/trailing whitespaces
-    stripped_string = string.strip()
-
-    # Convert the string to lowercase
-    lowercase_string = stripped_string.lower()
-
-    # Replace special characters with an underscore
-    converted_string = re.sub(r'[^a-z0-9_]+', '_', lowercase_string)
-
-    return converted_string
+    if pipeline_type.lower() == "scd1":
+        # Additional columns for SCD1 pipeline type
+        additional_columns = [{
+            "Name": "last_updated",
+            "Type": "STRING"
+        }]
+    elif pipeline_type.lower() == "scd2":
+        # Additional columns for SCD2 pipeline type
+        additional_columns = [{
+            "Name": "last_updated",
+            "Type": "STRING"
+        },
+        {
+            "Name": "active",
+            "Type": "STRING"
+        }]
+    else:
+        # Unknown pipeline type, return None
+        additional_columns = None
+    
+    return additional_columns
 
 
 def flatten_json_schema(json_schema, prefix='', delimiter='_'):
