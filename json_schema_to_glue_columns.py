@@ -175,6 +175,10 @@ def convert_json_schema_to_glue_columns(json_schema, flatten=False, delimiter='_
     Returns:
         list: The list of Glue columns.
     """
+
+    if "properties" not in json_schema:
+        raise Exception("Required key 'properties' not found in the JSON schema.")
+
     if flatten:
         flattened_schema = flatten_json_schema(json_schema, delimiter=delimiter)
         schema_properties = flattened_schema
@@ -184,6 +188,9 @@ def convert_json_schema_to_glue_columns(json_schema, flatten=False, delimiter='_
     columns = []
 
     for key, value in schema_properties.items():
+        if "type" not in value:
+            raise Exception(f"Required key 'type' not found for {key}.")
+
         column = {
             "Name": key,
             "Type": glue_column_type_from_json_schema(value)
