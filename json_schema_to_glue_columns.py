@@ -1,8 +1,43 @@
 import json
 
 import boto3
-import json
 import yaml
+
+def load_json_schema(schema_file_location):
+    """
+    Loads a JSON schema from a file.
+
+    Args:
+        schema_file_location (str): The path to the JSON schema file.
+
+    Returns:
+        dict: The loaded JSON schema.
+    """
+    # Open the JSON schema file
+    with open(schema_file_location) as schema_file:
+        # Load the JSON schema
+        schema = json.load(schema_file)
+
+    return schema
+
+
+def load_yaml_config(config_file_location):
+    """
+    Loads a configuration file in YAML format.
+
+    Args:
+        config_file_location (str): The path to the configuration file.
+
+    Returns:
+        dict: The loaded configuration data.
+    """
+    # Open the configuration file
+    with open(config_file_location) as config_file:
+        # Load the YAML content
+        config = yaml.safe_load(config_file)
+
+    return config
+
 
 def load_json_from_s3(bucket_name, object_key):
     """
@@ -29,6 +64,7 @@ def load_json_from_s3(bucket_name, object_key):
 
     return data
 
+
 def load_yaml_from_s3(bucket_name, object_key):
     """
     Retrieves a YAML file from an S3 bucket and loads its contents.
@@ -53,6 +89,7 @@ def load_yaml_from_s3(bucket_name, object_key):
     yaml_data = yaml.safe_load(yaml_content)
 
     return yaml_data
+
 
 def flatten_json_schema(json_schema, prefix='', delimiter='_'):
     """
@@ -124,6 +161,7 @@ def glue_column_type_from_json_schema(value):
             return f"ARRAY<{glue_column_type_from_json_schema(items)}>"
     else:
         raise Exception("Unknown type")
+
 
 def convert_json_schema_to_glue_columns(json_schema, flatten=False, delimiter='_'):
     """
