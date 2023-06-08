@@ -1,0 +1,52 @@
+{
+	"title": "Model",
+	"type": "object",
+	"properties": {
+		"viewer": {
+			"$ref": "#/definitions/Viewer"
+		}
+	},
+	"required": [
+		"viewer"
+	],
+	"definitions": {
+		"Item": {
+			"title": "Item",
+			"type": "object",
+			"properties": {
+				"id": {
+					"title": "Id",
+					"type": "string"
+				},
+				"label": {
+					"title": "Label",
+					"type": "string"
+				}
+			},
+			"required": [
+				"id"
+			]
+		},
+		"Viewer": {
+			"title": "Viewer",
+			"type": "object",
+			"properties": {
+				"header": {
+					"title": "Header",
+					"type": "string"
+				},
+				"items": {
+					"title": "Items",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/Item"
+					}
+				}
+			},
+			"required": [
+				"header",
+				"items"
+			]
+		}
+	}
+}

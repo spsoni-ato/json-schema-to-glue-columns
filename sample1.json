@@ -1,26 +1,22 @@
 {
-  "id": 1,
-  "isbn": "123-456-222",
-  "author": {
-      "lastname": "Doe",
-      "firstname": "Jane"
-  },
-  "editor": {
-      "lastname": "Smith",
-      "firstname": "Jane"
-  },
-  "title": "The Ultimate Database Study Guide",
-  "category": [
-      "Non-Fiction",
-      "Technology"
-  ],
-  "tags": [{
-          "key": "Title",
-          "value": "The Ultimate Database Study Guide"
-      },
-      {
-          "key": "ISBN",
-          "value": "123-456-222"
-      }
-  ]
+	"glossary": {
+		"title": "example glossary",
+		"GlossDiv": {
+			"title": "S",
+			"GlossList": {
+				"GlossEntry": {
+					"ID": "SGML",
+					"SortAs": "SGML",
+					"GlossTerm": "Standard Generalized Markup Language",
+					"Acronym": "SGML",
+					"Abbrev": "ISO 8879:1986",
+					"GlossDef": {
+						"para": "A meta-markup language, used to create markup languages such as DocBook.",
+						"GlossSeeAlso": ["GML", "XML"]
+					},
+					"GlossSee": "markup"
+				}
+			}
+		}
+	}
 }

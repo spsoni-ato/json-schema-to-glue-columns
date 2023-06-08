@@ -1,203 +1,131 @@
 {
-    "title": "Root Schema",
-    "type": "object",
-    "default": {},
-    "required": [
-        "id",
-        "isbn",
-        "author",
-        "editor",
-        "title",
-        "category",
-        "tags"
-    ],
-    "additionalProperties": true,
-    "properties": {
-        "ID": {
-            "title": "The id Schema",
-            "type": "number",
-            "default": 0,
-            "examples": [
-                1
-            ]
-        },
-        "isbn": {
-            "title": "The isbn Schema",
-            "type": "string",
-            "default": "",
-            "examples": [
-                "123-456-222"
-            ]
-        },
-        "author": {
-            "title": "The author Schema",
-            "type": "object",
-            "default": {},
-            "required": [
-                "lastname",
-                "firstname"
-            ],
-            "additionalProperties": true,
-            "properties": {
-                "last name": {
-                    "title": "The lastname Schema",
-                    "type": "string",
-                    "default": "",
-                    "examples": [
-                        "Doe"
-                    ]
-                },
-                "first-name": {
-                    "title": "The firstname Schema",
-                    "type": "string",
-                    "default": "",
-                    "examples": [
-                        "Jane"
-                    ]
-                }
-            },
-            "examples": [{
-                "lastname": "Doe",
-                "firstname": "Jane"
-            }]
-        },
-        "editor": {
-            "title": "The editor Schema",
-            "type": "object",
-            "default": {},
-            "required": [
-                "lastname",
-                "firstname"
-            ],
-            "additionalProperties": true,
-            "properties": {
-                "last name": {
-                    "title": "The lastname Schema",
-                    "type": "string",
-                    "default": "",
-                    "examples": [
-                        "Smith"
-                    ]
-                },
-                "first-name": {
-                    "title": "The firstname Schema",
-                    "type": "string",
-                    "default": "",
-                    "examples": [
-                        "Jane"
-                    ]
-                }
-            },
-            "examples": [{
-                "lastname": "Smith",
-                "firstname": "Jane"
-            }]
-        },
-        "title": {
-            "title": "The title Schema",
-            "type": "string",
-            "default": "",
-            "examples": [
-                "The Ultimate Database Study Guide"
-            ]
-        },
-        "category": {
-            "title": "The category Schema",
-            "type": "array",
-            "default": [],
-            "additionalItems": true,
-            "items": {
-                "title": "A Schema",
-                "type": "string",
-                "examples": [
-                    "Non-Fiction",
-                    "Technology"
-                ]
-            },
-            "examples": [
-                ["Non-Fiction",
-                    "Technology"
-                ]
-            ]
-        },
-        "tags": {
-            "title": "The tags Schema",
-            "type": "array",
-            "default": [],
-            "additionalItems": true,
-            "items": {
-                "title": "A Schema",
-                "type": "object",
-                "required": [
-                    "key",
-                    "value"
-                ],
-                "additionalProperties": true,
-                "properties": {
-                    "key": {
-                        "title": "The key Schema",
-                        "type": "string",
-                        "examples": [
-                            "Title",
-                            "ISBN"
-                        ]
-                    },
-                    "value": {
-                        "title": "The value Schema",
-                        "type": "string",
-                        "examples": [
-                            "The Ultimate Database Study Guide",
-                            "123-456-222"
-                        ]
-                    }
-                },
-                "examples": [{
-                    "key": "Title",
-                    "value": "The Ultimate Database Study Guide"
-                },
-                {
-                    "key": "ISBN",
-                    "value": "123-456-222"
-                }]
-            },
-            "examples": [
-                [{
-                    "key": "Title",
-                    "value": "The Ultimate Database Study Guide"
-                },
-                {
-                    "key": "ISBN",
-                    "value": "123-456-222"
-                }]
-            ]
-        },
-        "refSchema": {
+	"title": "Model",
+	"type": "object",
+	"properties": {
+		"glossary": {
+			"$ref": "#/definitions/Glossary"
+		},
+        "local": {
             "$ref": "./sample2.schema.json"
+        },
+        "external": {
+            "$ref": "https://github.com/sai-poona/json-schema-to-glue-columns/blob/main/sample3.schema.json"
         }
-    },
-    "examples": [{
-        "id": 1,
-        "isbn": "123-456-222",
-        "author": {
-            "lastname": "Doe",
-            "firstname": "Jane"
-        },
-        "editor": {
-            "lastname": "Smith",
-            "firstname": "Jane"
-        },
-        "title": "The Ultimate Database Study Guide",
-        "category": [
-            "Non-Fiction",
-            "Technology"
-        ],
-        "tags": [{
-            "key": "Title",
-            "value": "The Ultimate Database Study Guide"
-        },
-        {
-            "key": "ISBN",
-            "value": "123-456-222"
-        }]
-    }]
+	},
+	"required": [
+		"glossary",
+        "local",
+        "external"
+	],
+	"definitions": {
+		"GlossDef": {
+			"title": "GlossDef",
+			"type": "object",
+			"properties": {
+				"para": {
+					"title": "Para",
+					"type": "string"
+				},
+				"GlossSeeAlso": {
+					"title": "Glossseealso",
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				}
+			},
+			"required": [
+				"para",
+				"GlossSeeAlso"
+			]
+		},
+		"GlossEntry": {
+			"title": "GlossEntry",
+			"type": "object",
+			"properties": {
+				"ID": {
+					"title": "Id",
+					"type": "string"
+				},
+				"SortAs": {
+					"title": "Sortas",
+					"type": "string"
+				},
+				"GlossTerm": {
+					"title": "Glossterm",
+					"type": "string"
+				},
+				"Acronym": {
+					"title": "Acronym",
+					"type": "string"
+				},
+				"Abbrev": {
+					"title": "Abbrev",
+					"type": "string"
+				},
+				"GlossDef": {
+					"$ref": "#/definitions/GlossDef"
+				},
+				"GlossSee": {
+					"title": "Glosssee",
+					"type": "string"
+				}
+			},
+			"required": [
+				"ID",
+				"SortAs",
+				"GlossTerm",
+				"Acronym",
+				"Abbrev",
+				"GlossDef",
+				"GlossSee"
+			]
+		},
+		"GlossList": {
+			"title": "GlossList",
+			"type": "object",
+			"properties": {
+				"GlossEntry": {
+					"$ref": "#/definitions/GlossEntry"
+				}
+			},
+			"required": [
+				"GlossEntry"
+			]
+		},
+		"GlossDiv": {
+			"title": "GlossDiv",
+			"type": "object",
+			"properties": {
+				"title": {
+					"title": "Title",
+					"type": "string"
+				},
+				"GlossList": {
+					"$ref": "#/definitions/GlossList"
+				}
+			},
+			"required": [
+				"title",
+				"GlossList"
+			]
+		},
+		"Glossary": {
+			"title": "Glossary",
+			"type": "object",
+			"properties": {
+				"title": {
+					"title": "Title",
+					"type": "string"
+				},
+				"GlossDiv": {
+					"$ref": "#/definitions/GlossDiv"
+				}
+			},
+			"required": [
+				"title",
+				"GlossDiv"
+			]
+		}
+	}
 }
