@@ -170,6 +170,9 @@
                     "value": "123-456-222"
                 }]
             ]
+        },
+        "refSchema": {
+            "$ref": "./sample2.schema.json"
         }
     },
     "examples": [{
