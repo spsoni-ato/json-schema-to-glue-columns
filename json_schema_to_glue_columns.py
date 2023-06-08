@@ -261,6 +261,9 @@ def glue_column_type_from_json_schema(value):
 
         # Convert each property of the object to Glue column type
         for _key, _value in value["properties"].items():
+            if "type" not in _value:
+                raise Exception(f"Required key 'type' not found for {_key}.")
+
             _key = convert_to_lower_with_underscore(_key)
             _column_type = glue_column_type_from_json_schema(_value)
             _column = f"{_key}:{_column_type}"
