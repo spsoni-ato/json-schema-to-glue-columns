@@ -4,6 +4,9 @@ import re
 import boto3
 import yaml
 
+from resolvers import JSONRefResolver
+
+
 def replace_placeholders(dictionary, placeholders):
     """
     Replaces placeholders in a dictionary with corresponding values using regex.
@@ -68,8 +71,14 @@ def load_json_schema(schema_file_location):
     with open(schema_file_location) as schema_file:
         # Load the JSON schema
         schema = json.load(schema_file)
+    
+    # Create an instance of JSONRefResolver
+    resolver = JSONRefResolver(schema)
 
-    return schema
+    # Resolve the $ref references
+    resolved_schema = resolver.resolve_refs()
+
+    return resolved_schema
 
 
 def load_yaml_config(config_file_location, placeholders):
