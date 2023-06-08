@@ -9,7 +9,7 @@
             "$ref": "./sample2.schema.json"
         },
         "external": {
-            "$ref": "https://github.com/sai-poona/json-schema-to-glue-columns/blob/main/sample3.schema.json"
+            "$ref": "https://raw.githubusercontent.com/sai-poona/json-schema-to-glue-columns/main/sample3.schema.json"
         }
 	},
 	"required": [
